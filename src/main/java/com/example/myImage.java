@@ -12,6 +12,7 @@ import static org.bytedeco.javacpp.opencv_imgcodecs.*;
  *
  * @author Юрий
  */
+
 public class myImage {
     private IplImage image;
     private boolean isLoaded = false;
@@ -49,6 +50,45 @@ public class myImage {
             cvCvtColor(image, gray, CV_BGR2GRAY);
         }
         return new myImage(gray);
+    }
+    
+    public void  blurGauss()
+    {
+        int aperture = 3;
+        GaussianBlur(cvarrToMat(this.image), cvarrToMat(this.image), new Size(aperture, aperture), 0, 0, BORDER_DEFAULT);
+    }
+    
+    
+    private void MorphEx(int radius, int type, int iterations)
+    {
+        IplImage temp = cvCreateImage(cvGetSize(this.image), IPL_DEPTH_8U, 1);
+        IplConvKernel kern = cvCreateStructuringElementEx(radius*2+1, radius*2+1, radius, radius, CV_SHAPE_RECT);
+        cvMorphologyEx( this.image, 
+                        this.image, 
+                        temp,
+                        kern,
+                        type,
+                        iterations);
+    }
+    
+    public void morphClose(int radius, int iterations )
+    {
+        MorphEx(radius, CV_MOP_CLOSE, iterations);
+    }
+    private void sobel(int dx, int dy, int aperture)
+    {
+        cvSobel(this.image, this.image, dx, dy, aperture);
+    }
+    
+    public void sobel()   {this.sobel(1, 0, 3);}
+    public void sobel(int dx, int dy)   
+    { 
+        if (dy + dy == 0)
+            this.sobel();
+        else
+        {
+            this.sobel(dx, dy, 3);
+        }
     }
     
     public void save(String filename)
