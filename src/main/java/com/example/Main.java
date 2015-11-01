@@ -19,7 +19,16 @@ public class Main {
             myImage img = new myImage(path+filename);
         if ( img.isLoaded() ) 
         {
-            img.blurGauss();
+            myImage gray = img.toGray();
+            gray.blurGauss();
+            gray.threshold();
+            gray.save(path+"1thres_"+filename);
+            gray.Dilate(1);
+            gray.save(path+"2dilate_"+filename);
+            
+            gray.blurMedian();
+            gray.save(path+"3median_"+filename);
+ /*           img.blurGauss();
             img.save(path+"1smooth_"+filename);
             myImage gray = img.toGray();
             gray.save(path+"2gray_"+filename);
@@ -27,7 +36,7 @@ public class Main {
             gray.save(path+"3sobel01_"+filename);
             gray.morphClose(10,1);
             gray.save(path+"4mopcl_"+filename);
-            System.out.println("done!");
+   */         System.out.println("done!");
         }
         else
             System.out.println("bad adress");

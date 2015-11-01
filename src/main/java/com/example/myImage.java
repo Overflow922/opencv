@@ -5,6 +5,7 @@
  */
 package com.example;
 
+import org.bytedeco.javacpp.opencv_photo;
 import static org.bytedeco.javacpp.opencv_core.*;
 import static org.bytedeco.javacpp.opencv_imgproc.*;
 import static org.bytedeco.javacpp.opencv_imgcodecs.*;
@@ -58,6 +59,11 @@ public class myImage {
         GaussianBlur(cvarrToMat(this.image), cvarrToMat(this.image), new Size(aperture, aperture), 0, 0, BORDER_DEFAULT);
     }
     
+    public void  blurMedian()
+    {
+        medianBlur(cvarrToMat(this.image), cvarrToMat(this.image), 11);
+    }
+    
     
     private void MorphEx(int radius, int type, int iterations)
     {
@@ -75,6 +81,11 @@ public class myImage {
     {
         MorphEx(radius, CV_MOP_CLOSE, iterations);
     }
+    
+    public void denoizeGrayscale()
+    {
+  //      fastNlMeansDenoising(this.image, this.image, 10, 21, 7);
+    }
     private void sobel(int dx, int dy, int aperture)
     {
         cvSobel(this.image, this.image, dx, dy, aperture);
@@ -91,6 +102,16 @@ public class myImage {
         }
     }
     
+    public void Dilate(int dilation_size)
+    {
+        Mat element1 = getStructuringElement(MORPH_RECT, new  Size(2*dilation_size + 1, 2*dilation_size+1));
+        dilate(cvarrToMat(this.image), cvarrToMat(this.image), element1);
+    }
+    
+    public void threshold()
+    {
+        adaptiveThreshold(cvarrToMat(this.image), cvarrToMat(this.image), 225, CV_ADAPTIVE_THRESH_MEAN_C, CV_THRESH_BINARY_INV, 11, 11);
+    }
     public void save(String filename)
     {
         if ( this.isLoaded())
